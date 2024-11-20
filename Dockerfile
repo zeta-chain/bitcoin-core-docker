@@ -11,7 +11,7 @@ RUN groupadd --gid ${GID} bitcoin \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ARG TARGETPLATFORM
-ARG BITCOIN_VERSION=27.2
+ARG BITCOIN_VERSION=28.0
 ENV BITCOIN_DATA=/home/bitcoin/.bitcoin
 ENV PATH=/opt/bitcoin-${BITCOIN_VERSION}/bin:$PATH
 
