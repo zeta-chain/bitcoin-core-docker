@@ -1,7 +1,7 @@
 FROM debian:bullseye-slim
 
 RUN apt-get update -y \
-  && apt-get install -y curl gosu \
+  && apt-get install -y curl procps procps jq \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
@@ -21,5 +21,7 @@ RUN set -ex \
 VOLUME ["/root/.bitcoin"]
 
 RUN bitcoind -version | grep "Bitcoin Core version v${BITCOIN_VERSION}"
+
+COPY wallet.sh /opt/wallet.sh
 
 CMD ["bitcoind"]
