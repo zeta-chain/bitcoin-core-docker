@@ -124,7 +124,7 @@ load_wallet() {
   sleep 5
   bitcoin-cli loadwallet ${WALLET_NAME} || echo "wallet already loaded"
   sleep 5
-  bitcoin-cli importaddress "${WALLET_ADDRESS}" "${WALLET_NAME}" true || echo "address already exists"
+  bitcoin-cli -rpcwallet "${WALLET_NAME}" importaddress "${WALLET_ADDRESS}" "${WALLET_NAME}" true || echo "importaddress failed"
 }
 
 snapshot_restore() {

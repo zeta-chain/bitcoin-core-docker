@@ -22,6 +22,6 @@ VOLUME ["/root/.bitcoin"]
 
 RUN bitcoind -version | grep "Bitcoin Core version v${BITCOIN_VERSION}"
 
-COPY wallet.sh /opt/wallet.sh
+COPY wallet.sh wallet-health.sh /opt/
 
 CMD ["bitcoind"]
