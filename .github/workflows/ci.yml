@@ -94,7 +94,7 @@ jobs:
           docker restart ${CONTAINER_NAME}
       - name: Wait for healthy after restart
         run: |
-          while docker exec -i ${CONTAINER_NAME} /opt/wallet-health.sh; do
+          while ! docker exec -i ${CONTAINER_NAME} /opt/wallet-health.sh; do
             if ! docker ps | grep ${CONTAINER_NAME}; then
               echo "Container stopped?"
               exit 1
