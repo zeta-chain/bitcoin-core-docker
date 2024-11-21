@@ -94,12 +94,16 @@ get_current_height() {
       "signet")
         NETWORK_HEIGHT_URL=https://mempool.space/signet/api/blocks/tip/height
         ;;
+      "regtest")
+        echo 0
+        return
+        ;;
       *)
         echo "Unsupported chain: $CHAIN" >&2
         return 1
         ;;
     esac
-    fi
+  fi
   curl -s ${NETWORK_HEIGHT_URL}
 }
 
@@ -109,8 +113,8 @@ wait_for_network_sync() {
   do
     network_current_block=`get_current_height || echo "No height was observed. Waiting for external network to return check height."`
     node_current_block=`bitcoin-cli getblockchaininfo | jq -r '.blocks' || echo "No height was observed. Waiting for local network to return height."`
-    if [[ "${node_current_block}" == "${network_current_block}" ]]; then
-      echo "Bitcoin node is now synced, the local height matches external height."
+    if [[ "${node_current_block}" -ge "${network_current_block}" ]]; then
+      echo "Bitcoin node is now synced, the local height is greater than or equal to the external height."
       break
     else
       echo "Node height: ${node_current_block} Network Height: ${network_current_block} - Network Still Syncing"
