@@ -18,3 +18,13 @@ You should set several environment variables when running this container:
 | `WALLET_NAME` | name of the wallet for the `createwallet` and `loadwallet` commands |
 | `WALLET_ADDRESS` | address of the wallet |
 | `NETWORK_HEIGHT_URL` | url which will return the current height of the network. Will use mempool.space if unset. |
+
+ID mapping:
+
+| chain | zetachain chain ID | port |
+| -------- | ------- | --- |
+| `main`     |  8332 | 8332 |
+| `testnet3` | 18332 | 18332 |
+| `regtest`  | 18444 | 18443 |
+| `signet`   | 18333 | 38332 |
+| `testnet4` | 18334 | 48332 |
