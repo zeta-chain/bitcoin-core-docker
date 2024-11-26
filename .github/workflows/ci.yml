@@ -66,3 +66,40 @@ jobs:
           subject-name: ${{ env.IMAGE_BASE }}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 45
+    env:
+      CONTAINER_NAME: testnet4
+    steps:
+      - run: |
+          docker pull ${{ needs.build.outputs.IMAGE }}
+          docker tag ${{ needs.build.outputs.IMAGE }} bitcoin-core-docker
+      - uses: actions/checkout@v4
+      - run: ./examples/${CONTAINER_NAME}.sh
+      - name: Wait for healthy
+        run: |
+          while ! docker exec -i ${CONTAINER_NAME} /opt/wallet-health.sh; do
+            if ! docker ps | grep ${CONTAINER_NAME}; then
+              echo "Container stopped?"
+              exit 1
+            fi
+            echo "waiting for ${CONTAINER_NAME} health"
+            echo "Last log: $(docker logs -n1 ${CONTAINER_NAME})"
+            sleep 15
+          done
+      - name: Restart container
+        run: |
+          docker restart ${CONTAINER_NAME}
+      - name: Wait for healthy after restart
+        run: |
+          while ! docker exec -i ${CONTAINER_NAME} /opt/wallet-health.sh; do
+            if ! docker ps | grep ${CONTAINER_NAME}; then
+              echo "Container stopped?"
+              exit 1
+            fi
+            echo "waiting for ${CONTAINER_NAME} health"
+            echo "Last log: $(docker logs -n1 ${CONTAINER_NAME})"
+            sleep 15
+          done
