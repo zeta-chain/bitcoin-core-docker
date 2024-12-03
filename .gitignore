@@ -1,25 +1,3 @@
-.deps
-.DS_Store
 .env
 .idea/
 .vscode/
-.secrets
-.actrc
-coverage
-coverage.json
-coverage.out
-coverage.html
-node_modules
-release/
-typechain
-vue/
-vue/dist
-vue/node_modules
-vue/node_modules
-yarn-error.log
-contrib/meta.pem
-contrib/meta.pem.pub
-# GitHub Actions
-dispatch_payload.json
-.github/workflows/local-testing.yml
-zetachain-exporter
