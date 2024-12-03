@@ -12,7 +12,7 @@ generate_rpcauth_entry() {
   local salt
   local hashed_password
   salt=$(head -c 16 /dev/urandom | xxd -ps | tr -d '\n')
-  hashed_password=$(echo -n "${password}${salt}" | sha256sum | awk '{print $1}')
+  hashed_password=$(echo -n "${password}" | openssl dgst -sha256 -hmac "${salt}" -binary | xxd -p -c 64)
   
   echo "rpcauth=${user}:${salt}\$${hashed_password}"
 }

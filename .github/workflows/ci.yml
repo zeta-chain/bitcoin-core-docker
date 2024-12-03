@@ -77,7 +77,8 @@ jobs:
           docker pull ${{ needs.build.outputs.IMAGE }}
           docker tag ${{ needs.build.outputs.IMAGE }} bitcoin-core-docker
       - uses: actions/checkout@v4
-      - run: ./examples/${CONTAINER_NAME}.sh
+      - name: Start ${{ env.CONTAINER_NAME }}
+        run: ./examples/${CONTAINER_NAME}.sh
       - name: Wait for healthy
         run: |
           while ! docker exec -i ${CONTAINER_NAME} /opt/wallet-health.sh; do
@@ -103,3 +104,5 @@ jobs:
             echo "Last log: $(docker logs -n1 ${CONTAINER_NAME})"
             sleep 15
           done
+      - name: Ensure default user works with whitelist
+        run: docker exec ${CONTAINER_NAME} bitcoin-cli -rpcuser=default -rpcpassword=default getblockcount
