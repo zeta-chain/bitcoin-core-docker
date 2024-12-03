@@ -1,13 +1,36 @@
 #!/bin/bash
 
+generate_rpcauth_entry() {
+  local user="$1"
+  local password="$2"
+  
+  if [[ -z "$user" || -z "$password" ]]; then
+      echo "Usage: generate_rpcauth_entry <user> <password>"
+      return 1
+  fi
+
+  local salt
+  local hashed_password
+  salt=$(head -c 16 /dev/urandom | xxd -ps | tr -d '\n')
+  hashed_password=$(echo -n "${password}${salt}" | sha256sum | awk '{print $1}')
+  
+  echo "rpcauth=${user}:${salt}\$${hashed_password}"
+}
+
 # set default config
 # this makes running bitcoin-cli interactively much easier
+# the admin user is the default user when running commands locally
+# the rpc user is for remote usage
 
 echo "
 chain=${CHAIN}
-rpcuser=${RPC_USER}
-rpcpassword=${RPC_PASSWORD}
+rpcuser=${ADMIN_RPC_USER}
+rpcpassword=${ADMIN_RPC_PASSWORD}
 rpcallowip=0.0.0.0/0
+$(generate_rpcauth_entry $ADMIN_RPC_USER $ADMIN_RPC_PASSWORD)
+$(generate_rpcauth_entry $RPC_USER $RPC_PASSWORD)
+rpcwhitelist=${RPC_USER}:getnetworkinfo,getbalance,sendrawtransaction,listunspent,listunspentminmaxaddresses,estimatesmartfee,gettransaction,getrawtransaction,getrawtransactionverbose,getblockcount,getblockhash,getblockverbose,getblockverbosetx,getblockheader
+rpcwhitelistdefault=0
 
 [${CHAIN}]
 rpcbind=0.0.0.0
