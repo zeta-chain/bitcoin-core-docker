@@ -147,6 +147,10 @@ wait_for_network_sync() {
 }
 
 load_wallet() {
+  if [[ -z "${WALLET_NAME}" ]]; then
+    echo "WARN: WALLET_NAME is not set"
+    return
+  fi
   bitcoin-cli -named createwallet wallet_name=${WALLET_NAME} disable_private_keys=true load_on_startup=true descriptors=false || echo "wallet exists"
   sleep 5
   bitcoin-cli loadwallet ${WALLET_NAME} || echo "wallet already loaded"
