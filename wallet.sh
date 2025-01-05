@@ -29,7 +29,7 @@ rpcpassword=${ADMIN_RPC_PASSWORD}
 rpcallowip=0.0.0.0/0
 $(generate_rpcauth_entry $ADMIN_RPC_USER $ADMIN_RPC_PASSWORD)
 $(generate_rpcauth_entry $RPC_USER $RPC_PASSWORD)
-rpcwhitelist=${RPC_USER}:getnetworkinfo,getbalance,sendrawtransaction,listunspent,estimatesmartfee,gettransaction,getrawtransaction,getblock,getblockhash,getblockheader,getblockcount,getinfo,ping
+rpcwhitelist=${RPC_USER}:getnetworkinfo,getbalance,sendrawtransaction,listunspent,estimatesmartfee,gettransaction,getrawtransaction,getrawmempool,getmempoolentry,getblock,getblockhash,getblockheader,getblockcount,getinfo,ping
 rpcwhitelistdefault=0
 
 [${CHAIN}]
