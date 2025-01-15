@@ -81,9 +81,7 @@ start_bitcoind() {
 
 stop_bitcoind_daemon() {
   bitcoin_pid=$(pgrep bitcoind)
-  echo "Kill bitcoind with kill -SIGTERM"
-  kill -SIGTERM "$bitcoin_pid"
-  echo "bitcoind PID: ${bitcoin_pid}"
+  bitcoin-cli stop
   while kill -0 "$bitcoin_pid" 2> /dev/null; do
     echo "Waiting for bitcoind process to stop."
     check_bitcoin_is_running
