@@ -3,7 +3,7 @@
 generate_rpcauth_entry() {
   local user="$1"
   local password="$2"
-  
+
   if [[ -z "$user" || -z "$password" ]]; then
       echo "Usage: generate_rpcauth_entry <user> <password>"
       return 1
@@ -13,7 +13,7 @@ generate_rpcauth_entry() {
   local hashed_password
   salt=$(head -c 16 /dev/urandom | xxd -ps | tr -d '\n')
   hashed_password=$(echo -n "${password}" | openssl dgst -sha256 -hmac "${salt}" -binary | xxd -p -c 64)
-  
+
   echo "rpcauth=${user}:${salt}\$${hashed_password}"
 }
 
@@ -154,6 +154,14 @@ load_wallet() {
   bitcoin-cli loadwallet ${WALLET_NAME} || echo "wallet already loaded"
   sleep 5
   bitcoin-cli -rpcwallet="${WALLET_NAME}" importaddress "${WALLET_ADDRESS}" "${WALLET_NAME}" true || echo "importaddress failed"
+
+  # Import extra addresses if set
+  if [[ ! -z "${EXTRA_ADDRESSES}" ]]; then
+    IFS=',' read -ra ADDR_ARRAY <<< "${EXTRA_ADDRESSES}"
+    for addr in "${ADDR_ARRAY[@]}"; do
+      bitcoin-cli -rpcwallet="${WALLET_NAME}" importaddress "${addr}" "${addr}" true || echo "importaddress failed for ${addr}"
+    done
+  fi
 }
 
 snapshot_restore() {
@@ -171,7 +179,7 @@ snapshot_restore() {
   mkdir -p ~/.bitcoin/ || echo "already exists."
   cd ~/.bitcoin/
   rm -rf ~/.bitcoin/{$CHAIN}
-  
+
   curl -L "${SNAPSHOT_URL}" | tar -xzf -
   touch ~/.bitcoin/extracted
 

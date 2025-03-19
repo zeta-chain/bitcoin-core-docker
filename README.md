@@ -17,6 +17,7 @@ You should set several environment variables when running this container:
 | `RPC_PASSWORD` | `rpcpassword` config setting.   |
 | `WALLET_NAME` | name of the wallet for the `createwallet` and `loadwallet` commands |
 | `WALLET_ADDRESS` | address of the wallet |
+| `EXTRA_ADDRESSES` | extra addresses to import into the wallet 
 | `NETWORK_HEIGHT_URL` | url which will return the current height of the network. Will use mempool.space if unset. |
 
 ID mapping:
